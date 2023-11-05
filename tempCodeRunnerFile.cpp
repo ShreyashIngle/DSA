@@ -1,1 +1,2 @@
-1 3 7 -1 -1  11 -1 -1 5 17 -1 -1 -1
+";
+    Node *root = CreateExprTree(postfix);

@@ -50,6 +50,7 @@ Node *CreateExprTree(string postfix)
     return s.top();
 }
 
+// Recursion
 void Inorder(Node *root)
 
 {
@@ -60,6 +61,30 @@ void Inorder(Node *root)
         Inorder(root->right);
     }
 }
+
+// NonRecursion
+void inorderNonRecur(Node *root)
+{
+    stack<Node *> st;
+    Node *current = root;
+
+    while (!st.empty() || current != nullptr)
+    {
+        if (current != nullptr)
+        {
+            st.push(current);
+            current = current->left;
+        }
+        else
+        {
+            current = st.top();
+            st.pop();
+            cout << current->data << " ";
+            current = current->right;
+        }
+    }
+}
+
 void Preorder(Node *root)
 
 {
@@ -70,6 +95,29 @@ void Preorder(Node *root)
         Preorder(root->right);
     }
 }
+// NonRecur
+void preorderNonRecur(Node *root)
+{
+    stack<Node *> st;
+    Node *current = root;
+
+    while (current != nullptr || !st.empty())
+    {
+        if (current != nullptr)
+        {
+            cout << current->data << " ";
+            st.push(current);
+            current = current->left;
+        }
+        else
+        {
+            current = st.top();
+            st.pop();
+            current = current->right;
+        }
+    }
+}
+
 void Postorder(Node *root)
 {
 
@@ -80,23 +128,118 @@ void Postorder(Node *root)
         cout << root->data << " ";
     }
 }
+// Non Recur
+void postorderNonRecur(Node *root)
+{
+    stack<pair<Node *, bool>> st;
+    Node *current = root;
+    bool visited = false;
+
+    while (current != nullptr || !st.empty())
+    {
+        if (current != nullptr)
+        {
+            st.push(make_pair(current, visited));
+            current = current->left;
+            visited = false;
+        }
+        else
+        {
+            pair<Node *, bool> top = st.top();
+            st.pop();
+            current = top.first;
+            visited = top.second;
+
+            if (!visited)
+            {
+                visited = true;
+                st.push(make_pair(current, visited));
+                current = current->right;
+            }
+            else
+            {
+                cout << current->data << " ";
+                current = nullptr;
+            }
+        }
+    }
+}
 
 int main(int argc, char const *argv[])
 {
-    string postfix = "AB+CD-*";
+    Node *root;
+    int choice;
+    cout << "1.Recursion\n2.Non-Recursion\n\nEnter the choice: " << endl;
+    cin >> choice;
+    string postfix = "";
+    cout << "Enter the Postfix Expression" << endl;
 
-    Node *root = CreateExprTree(postfix);
+    cin >> postfix;
+    root = CreateExprTree(postfix);
 
-    cout << "Inorder Traversal: ";
-    Inorder(root);
-    cout << endl;
+    while (true)
+    {
 
-    cout << "Preorder Traversal: ";
-    Preorder(root);
-    cout << endl;
+        cout << "\n1.Inorder\n2.Preorder\n3.Postorder\n4.Exit\nEnter the choice: ";
+        int n;
+        cin >> n;
+        switch (choice)
+        {
+        case 1:
+            if (n == 1)
+            {
+                cout << "Inorder: ";
+                Inorder(root);
+                cout << endl;
+            }
+            else if (n == 2)
+            {
+                cout << "Preorder: ";
+                Preorder(root);
+                cout << endl;
+            }
+            else if (n == 3)
+            {
+                cout << "Postorder: ";
+                Postorder(root);
+                cout << endl;
+            }
+            else
+            {
+                exit(0);
+            }
 
-    cout << "Postorder Traversal: ";
-    Postorder(root);
-    cout << endl;
+            break;
+        case 2:
+            if (n == 1)
+            {
+                cout << "Inorder: ";
+                inorderNonRecur(root);
+                cout << endl;
+            }
+            else if (n == 2)
+            {
+                cout << "Preorder: ";
+                preorderNonRecur(root);
+                cout << endl;
+            }
+            else if (n == 3)
+            {
+                cout << "Postorder: ";
+                postorderNonRecur(root);
+                cout << endl;
+            }
+            else
+            {
+                exit(0);
+            }
+
+            break;
+
+        default:
+            cout << "invalid";
+            break;
+        }
+    }
     return 0;
 }
