@@ -30,12 +30,12 @@ Node *CreateExprTree(string postfix)
     {
         if (isOperator(c))
         {
-            Node* right = s.top();
+            Node *right = s.top();
             s.pop();
-            Node* left = s.top();
+            Node *left = s.top();
             s.pop();
 
-            Node* newNode =  createNode(c);
+            Node *newNode = createNode(c);
             newNode->left = left;
             newNode->right = right;
             s.push(newNode);
@@ -43,36 +43,60 @@ Node *CreateExprTree(string postfix)
 
         else
         {
-            Node* operand = createNode(c);
+            Node *operand = createNode(c);
             s.push(operand);
         }
-        
     }
-     return s.top();
+    return s.top();
 }
 
-void Inorder(Node* root){
-   {
-  if (root != nullptr) {
-    Inorder(root->left);
-    cout << root->data << " ";
-    Inorder(root->right);
-  }
+void Inorder(Node *root)
+
+{
+    if (root != nullptr)
+    {
+        Inorder(root->left);
+        cout << root->data << " ";
+        Inorder(root->right);
+    }
 }
-    
-    
+void Preorder(Node *root)
+
+{
+    if (root != nullptr)
+    {
+        cout << root->data << " ";
+        Preorder(root->left);
+        Preorder(root->right);
+    }
+}
+void Postorder(Node *root)
+{
+
+    if (root != nullptr)
+    {
+        Postorder(root->left);
+        Postorder(root->right);
+        cout << root->data << " ";
+    }
 }
 
 int main(int argc, char const *argv[])
 {
     string postfix = "AB+CD-*";
 
-  Node* root = CreateExprTree(postfix);
+    Node *root = CreateExprTree(postfix);
 
- 
+    cout << "Inorder Traversal: ";
+    Inorder(root);
+    cout << endl;
 
-  cout << "Inorder Traversal: ";
-  Inorder(root);
-  cout << endl;
+    cout << "Preorder Traversal: ";
+    Preorder(root);
+    cout << endl;
+
+    cout << "Postorder Traversal: ";
+    Postorder(root);
+    cout << endl;
     return 0;
 }
