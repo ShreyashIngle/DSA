@@ -272,7 +272,6 @@ void Postorder(struct Node *root)
     }
 }
 
-
 void mirrorBST(Node *root)
 {
     if (root == nullptr)
@@ -348,5 +347,16 @@ int main()
     mirrorBST(root);
     LevelOrderTraversal(root);
 
+// // Insert(root,key);
+// // InsertNonRecur(root,key);
+// // Search(root,key);
+// // SearchNonRecur(root,key);
+// // Inorder(root);
+// // Preorder(root);
+// // Postorder(root);
+// // minVal(root)->data;
+// // Delete(root,key);
+// // maxDepth(root);
     return 0;
 }
+
