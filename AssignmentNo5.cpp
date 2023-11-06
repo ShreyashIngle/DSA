@@ -272,13 +272,6 @@ void Postorder(struct Node *root)
     }
 }
 
-// ptr Mirror_BST(BST root)
-// Step 1: If treet != NULL
-// Step 2: temp =tree->Right
-//  tree-> Right= tree->Left
-//  tree->Left=temp
-// Step 3: Mirror_BST(tree->Left)
-// Step 4: Mirror_BST(tree->Right)
 
 void mirrorBST(Node *root)
 {
