@@ -18,6 +18,7 @@ struct Node *createNode(int data)
     return newNode;
 }
 
+// Recur
 struct Node *Insert(struct Node *node, int key)
 {
     if (node == NULL)
@@ -37,6 +38,8 @@ struct Node *Insert(struct Node *node, int key)
 
     return node;
 }
+
+// Non Recur
 struct Node *InsertNonRecur(struct Node *node, int key)
 {
     Node *newNode = createNode(key);
@@ -74,6 +77,7 @@ struct Node *InsertNonRecur(struct Node *node, int key)
     return node;
 }
 
+// Recur
 struct Node *Search(struct Node *node, int key)
 {
     if (node == NULL || node->data == key)
@@ -91,6 +95,8 @@ struct Node *Search(struct Node *node, int key)
         return Search(node->right, key);
     }
 }
+
+// Non recur
 struct Node *SearchNonRecur(struct Node *node, int key)
 {
     Node *temp = node;
@@ -123,6 +129,7 @@ Node *minVal(Node *root)
     }
     return temp;
 }
+
 void LevelOrderTraversal(Node *root)
 {
     queue<Node *> q;
@@ -265,6 +272,25 @@ void Postorder(struct Node *root)
     }
 }
 
+// ptr Mirror_BST(BST root)
+// Step 1: If treet != NULL
+// Step 2: temp =tree->Right
+//  tree-> Right= tree->Left
+//  tree->Left=temp
+// Step 3: Mirror_BST(tree->Left)
+// Step 4: Mirror_BST(tree->Right)
+
+void mirrorBST(Node *root)
+{
+    if (root == nullptr)
+    {
+        return;
+    }
+    std::swap(root->left, root->right);
+    mirrorBST(root->left);
+    mirrorBST(root->right);
+}
+
 int main()
 {
 
@@ -301,7 +327,7 @@ int main()
     Postorder(root);
     cout<<endl;*/
 
-    int key = 10;
+    int key = 50;
 
     if (SearchNonRecur(root, key) == NULL)
     {
@@ -325,5 +351,9 @@ int main()
 
     cout << endl
          << minVal(root)->data;
+
+    mirrorBST(root);
+    LevelOrderTraversal(root);
+
     return 0;
 }
