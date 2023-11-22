@@ -287,76 +287,116 @@ int main()
 {
 
     Node *root = NULL;
-    root = InsertNonRecur(root, 50);
-    root = InsertNonRecur(root, 20);
-    root = InsertNonRecur(root, 70);
-    root = InsertNonRecur(root, 10);
-    root = InsertNonRecur(root, 30);
-    root = InsertNonRecur(root, 90);
-    root = InsertNonRecur(root, 110);
 
-    LevelOrderTraversal(root);
-
-    cout << "Inorder:";
-    Inorder(root);
-    cout << endl;
-
-    root = Delete(root, 10);
-    LevelOrderTraversal(root);
-
-    // root = Delete(root, 20);
-    // cout << "Inorder:";
-    // Inorder(root);
-    // cout << endl;
-
-    // cout << maxDepth(root);
-    /*cout<<endl;
-    cout<<"Preorder:";
-    Preorder(root);
-    cout<<endl;
-
-    cout<<"Postorder:";
-    Postorder(root);
-    cout<<endl;*/
-
-    int key = 50;
-
-    if (SearchNonRecur(root, key) == NULL)
+    int n;
+    int choice;
+    while (1)
     {
-        cout << key << " Not found";
+        cout << "\n1.Insert\n2.Delete\n3.Search\n4.Depth\n5.Mirror\n6.Traversals\n7.FindMin\n8.Display Tree\n9.exit\nEnter the choice:";
+        // cout << "\n-----MENU-----\n1.Recursion\n2.Non Recursion\nEnter the choice:";
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+
+            cout << "\n1.Recursion\n2.Non Recursion\nEnter the choice:";
+            int i;
+            cin >> i;
+            if (i == 1)
+            {
+
+                cout << "Enter the element to be inserted: ";
+                cin >> n;
+                root = Insert(root, n);
+            }
+            else
+            {
+                cout << "Enter the element to be inserted: ";
+                cin >> n;
+                root = InsertNonRecur(root, n);
+            }
+            break;
+        case 2:
+            cout << "\nEnter element to be deleted : ";
+            cin >> n;
+            root = Delete(root, n);
+            cout << "\nBST after deletion of element is : ";
+            Inorder(root);
+            break;
+
+        case 3:
+            cout << "\n1.Recursion\n2.Non Recursion\nEnter the choice:";
+
+            cin >> i;
+            if (i == 1)
+            {
+
+                cout << "\nEnter element to be searched : ";
+                cin >> n;
+                if (Search(root, n) == NULL)
+                {
+                    cout << n << " Not found";
+                }
+                else
+                {
+                    cout << n << " is found" << endl;
+                }
+            }
+            else
+            {
+                cout << "\nEnter element to be searched : ";
+                cin >> n;
+                if (SearchNonRecur(root, n) == NULL)
+                {
+                    cout << n << " Not found";
+                }
+                else
+                {
+                    cout << n << " is found" << endl;
+                }
+            }
+            break;
+        case 4:
+            cout << "\nDepth of tree is: " << maxDepth(root);
+            break;
+
+        case 5:
+            mirrorBST(root);
+            cout << "\nInorder traversal of mirror tree is : ";
+            Inorder(root);
+            cout << endl;
+            LevelOrderTraversal(root);
+            break;
+
+        case 6:
+            cout << "Inorder:";
+            Inorder(root);
+            cout << endl;
+            cout << "Preorder:";
+            Preorder(root);
+            cout << endl;
+            cout << "Postorder:";
+            Postorder(root);
+            cout << endl;
+            break;
+
+        case 7:
+            cout << "\nMinimum element in BST is : " << minVal(root)->data;
+            break;
+
+        case 8:
+            LevelOrderTraversal(root);
+            break;
+
+        case 9:
+            exit(0);
+            break;
+
+        default:
+            cout << "Invalid!!";
+            break;
+        }
     }
-    else
-    {
-        cout << key << " is found" << endl;
-    }
 
-    int k = 13;
-
-    if (Search(root, k) == NULL)
-    {
-        cout << k << " Not found";
-    }
-    else
-    {
-        cout << k << " is found" << endl;
-    }
-
-    cout << endl
-         << minVal(root)->data;
-
-    mirrorBST(root);
-    LevelOrderTraversal(root);
-
-// // Insert(root,key);
-// // InsertNonRecur(root,key);
-// // Search(root,key);
-// // SearchNonRecur(root,key);
-// // Inorder(root);
-// // Preorder(root);
-// // Postorder(root);
-// // minVal(root)->data;
-// // Delete(root,key);
-// // maxDepth(root);
     return 0;
 }
-
