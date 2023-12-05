@@ -127,7 +127,7 @@ public:
             if (current->leftThread) {
                 current = current->right;
             } else {
-                while (current->leftThread != nullptr) {
+                while (current->leftThread ) {
                     current = current->leftThread;
                 }
 

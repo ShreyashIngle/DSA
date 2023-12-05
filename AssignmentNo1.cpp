@@ -20,10 +20,17 @@ void bubbleSort(Student arr[], int n)
             if (arr[j].rollNo > arr[j + 1].rollNo)
             {
 
-                swap(arr[j], arr[j + 1]);
+                // int temp = arr[j];
+                // arr[j] = arr[j+1];
+                // arr[j+1] = temp;
+                swap(arr[j],arr[j+1]);
             }
         }
     }
+}
+
+void LinearSearch(Student arr[],int n ){
+    
 }
 
 // Function to perform Insertion Sort
