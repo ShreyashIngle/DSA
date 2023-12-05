@@ -1,43 +1,104 @@
 #include <iostream>
 using namespace std;
 
-struct Student
+void maxHeap(int arr[], int n, int i)
 {
-    int rollno;
-    string name;
-    float sgpa;
-};
+    int rootIndex = i;
+    int leftIndex = 2 * i + 1;
+    int rightIndex = 2 * i + 2;
 
-void BubbleSort(Student arr[], int n)
-{
-    for (int i = 0; i < n - 1; i++)
+    if (leftIndex < n && arr[leftIndex] > arr[rootIndex])
     {
-        for (int j = 0; j < n - i - 1; j++)
+        rootIndex = leftIndex;
+    }
+    if (rightIndex < n && arr[rightIndex] > arr[rootIndex])
+    {
+        rootIndex = rightIndex;
+    }
+
+    if (rootIndex != i)
+    {
+        swap(arr[rootIndex], arr[i]);
+        maxHeap(arr, n, arr[rootIndex]);
+    }
+}
+void minHeap(int arr[], int n, int i)
+{
+    int rootIndex = i;
+    int leftIndex = 2 * i + 1;
+    int rightIndex = 2 * i + 2;
+
+    if (leftIndex < n && arr[leftIndex] < arr[rootIndex])
+    {
+        rootIndex = leftIndex;
+    }
+    if (rightIndex < n && arr[rightIndex] < arr[rootIndex])
+    {
+        rootIndex = rightIndex;
+    }
+
+    if (rootIndex != i)
+    {
+        swap(arr[rootIndex], arr[i]);
+        maxHeap(arr, n, arr[rootIndex]);
+    }
+}
+
+void heapSort(int arr[], int n, int choice)
+{
+    if (choice == 1)
+    {
+        for (int i = (n / 2 - 1); i >= 0; i--)
         {
-            if (arr[j].rollno > arr[j + 1].rollno)
-            {
-                swap(arr[j], arr[j + 1]);
-            }
+            maxHeap(arr, n, i);
+        }
+        for (int i = n - 1; i >= 0; i--)
+        {
+            swap(arr[0], arr[i]);
+            maxHeap(arr, i, 0);
+        }
+    }
+    else
+    {
+        for (int i = (n / 2 - 1); i >= 0; i--)
+        {
+            minHeap(arr, n, i);
+        }
+        for (int i = n - 1; i >= 0; i--)
+        {
+            swap(arr[0], arr[i]);
+            minHeap(arr, i, 0);
         }
     }
 }
 
+void display(int arr[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
 int main(int argc, char const *argv[])
 {
     int n;
     cin >> n;
-    Student s[n];
-    s[0].rollno = 5;
-    s[1].rollno = 4;
-    s[2].rollno = 3;
-    s[3].rollno = 2;
-    s[4].rollno = 1;
 
-    BubbleSort(s, n);
+    int arr[n];
+
     for (int i = 0; i < n; i++)
     {
-        cout << s[i].rollno << " ";
+        cin >> arr[i];
     }
+
+    cout << endl;
+
+    cout << "Initial Array : ";
+    display(arr, n);
+    heapSort(arr, n, 1);
+    cout << "Sorted Array : ";
+    display(arr, n);
 
     return 0;
 }
