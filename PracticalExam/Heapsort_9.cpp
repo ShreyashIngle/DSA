@@ -24,7 +24,6 @@ void maxHeapify(int arr[], int n, int i)
 
 void minHeapify(int arr[], int n, int i)
 {
-
     int rootIndex = i;
     int leftIndex = 2 * i + 1;
     int rightindex = 2 * i + 2;
@@ -76,10 +75,12 @@ void printArray(int arr[], int n)
 {
     for (int i = 0; i < n; i++)
     {
+
         cout << arr[i] << " ";
     }
-    cout<<endl;
+    cout << endl;
 }
+
 int main()
 {
     int n;
