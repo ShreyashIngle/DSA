@@ -11,7 +11,7 @@ struct Student
 
 void create_file()
 {
-    ofstream file("C:\\Users\\Tejas Ingle\\OneDrive\\Desktop\\PICT Study\\DSA\\students.txt");
+    ofstream file("C:\\Users\\Tejas Ingle\\OneDrive\\Desktop\\PICT Study\\DSA\\PracticalExam\\students.txt");
     if (!file)
     {
         cout << "Error openinig file.." << endl;
@@ -157,7 +157,8 @@ int main(int argc, char const *argv[])
             break;
 
         default:
-            cout << "Invalid input..." ;break;
+            cout << "Invalid input...";
+            break;
         }
     }
 
