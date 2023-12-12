@@ -1,163 +1,122 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Student
+struct Node
 {
-    int roll_number;
-    string name;
-    string division;
-    string address;
+public:
+    int data;
+    Node *left, *right;
+    int left_th, right_th;
+
+    Node(int x)
+    {
+        data = x;
+        left = right = nullptr;
+        left_th = right_th = 0;
+    }
 };
 
-void create_file()
+class TBT
 {
-    ofstream file("C:\\Users\\Tejas Ingle\\OneDrive\\Desktop\\PICT Study\\DSA\\students.txt");
-    if (!file)
+public:
+    Node *root;
+    TBT()
     {
-        cout << "Error openinig file.." << endl;
-        return;
+        root = new Node(-1);
+        root->left = root->right = root;
     }
-    else
+
+    void create()
     {
-        cout << "File created successfully.." << endl;
-        file.close();
+        createRecursive(root, 0);
     }
-}
 
-void add_student()
-{
-    Student student;
-    cout << "\nEnter the roll no:";
-    cin >> student.roll_number;
-    cin.ignore();
-    cout << "\nEnter the name:";
-    getline(cin, student.name);
-    cout << "\nEnter the division:";
-    getline(cin, student.division);
-    cout << "\nEnter the address:";
-    getline(cin, student.address);
-
-    ofstream file("students.txt", ios::app);
-    if (!file)
+    void createRecursive(Node *parent, int child)
     {
-        cout << "Error opeing file..";
-        return;
-    }
-    file << student.roll_number << " " << student.name << " " << student.division << " " << student.address << endl;
-    cout << "Student added success fully..." << endl;
-    file.close();
-}
+        int value;
+        cout << "\nEnter the value or -1 to exit :";
+        cin >> value;
 
-void display()
-{
-    int roll_number;
-    cout << "Enter the roll number: ";
-    cin >> roll_number;
-
-    ifstream file("students.txt");
-    if (!file)
-    {
-        cout << "Error opening file.." << endl;
-        return;
-    }
-    Student student;
-    bool found = false;
-    while (file >> student.roll_number >> student.name >> student.division >> student.address)
-    {
-        if (student.roll_number == roll_number)
+        if (value == -1)
         {
-            found = true;
-            break;
+            return;
         }
-    }
 
-    if (found)
-    {
-        cout << "Roll number : " << student.roll_number << endl;
-        cout << "Name  : " << student.name << endl;
-        cout << "Division : " << student.division << endl;
-        cout << "Address : " << student.address << endl;
-        file.close();
-    }
-    else
-    {
-        cout << "Not found...";
-    }
-}
+        Node *newNode = new Node(value);
 
-void delete_student()
-{
-    int roll_number;
-    cout << "\nEnter the roll number:";
-    cin >> roll_number;
-
-    ifstream original_file("students.txt");
-    if (!original_file)
-    {
-        cout << "Error opening file.." << endl;
-        return;
-    }
-    ofstream temp_file("temp.txt");
-    if (!temp_file)
-    {
-        cout << "Error opening file.." << endl;
-        original_file.close();
-        return;
-    }
-
-    Student student;
-    bool deleted = false;
-
-    while (original_file >> student.roll_number >> student.name >> student.division >> student.address)
-    {
-        if (student.roll_number != roll_number)
+        if (child == 0)
         {
-            temp_file << student.roll_number << " " << student.name << " " << student.division << " " << student.address << endl;
+            newNode->left = parent->left;
+            newNode->right = parent;
+            parent->left = newNode;
+            parent->left_th = 1;
         }
         else
         {
-            deleted = true;
+            newNode->right = parent->right;
+            newNode->left = parent;
+            parent->right = newNode;
+            parent->right_th = 1;
+        }
+
+        cout << "\nEnter the left value of " << value << ":";
+        createRecursive(newNode, 0);
+
+        cout << "\nEnter the right value of " << value << ":";
+        createRecursive(newNode, 1);
+    }
+    void inorder()
+    {
+        cout << "\nInorder traversal:\n";
+        Node *current = root->left;
+
+        while (current != root)
+        {
+            while (current->left_th == 1)
+            {
+                current = current->left;
+                cout << current->data << " ";
+            }
+
+            cout << current->data << " ";
+
+            while (current->right_th == 0 || current->right == root)
+            {
+                current = current->right;
+                if (current == root)
+                {
+                    return;
+                }
+                cout << current->data << " ";
+            }
+
+            current = current->right;
         }
     }
+};
 
-    original_file.close();
-    temp_file.close();
-
-    if (deleted)
-    {
-        remove("students.txt");
-        rename("temp.txt", "students.txt");
-        cout << "Student deleted successfully....";
-    }
-}
-int main(int argc, char const *argv[])
+int
+main(int argc, char const *argv[])
 {
+    TBT tree;
+    int choice;
     while (true)
     {
-        int choice;
-        cout << "\n1.Create\n2.Insert\n3.Display\n4.Delete\n5.Exit\nEnter the choice: ";
+        cout << "\n1.Create Tree\n2.Inorder\nPreorder\nEnter the choice:";
         cin >> choice;
 
         switch (choice)
         {
         case 1:
-            create_file();
+            tree.create();
             break;
+
         case 2:
-            add_student();
-            break;
-        case 3:
-            display();
-            break;
-        case 4:
-            delete_student();
-            break;
-        case 5:
-            exit(0);
+            tree.inorder();
             break;
 
         default:
-            cout << "Invalid input..." ;break;
+            break;
         }
     }
 
