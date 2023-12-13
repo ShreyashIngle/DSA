@@ -1,186 +1,132 @@
 #include <bits/stdc++.h>
-#include <C:\Users\Tejas Ingle\OneDrive\Desktop\PICT Study\DSA\PracticalExam\InfixtoPost_2\stackADT.cpp>
+
 using namespace std;
 
-int prec(char c)
+struct Node
 {
-    if (c == '^')
-    {
-        return 3;
-    }
-    else if (c == '*' && c == '/')
-    {
-        return 2;
-    }
-    else if (c == '+' && c == '-')
-    {
-        return 1;
-    }
-    else
-    {
-        return -1;
-    }
+    char data;
+    Node *left;
+    Node *right;
+};
+
+Node *createNode(char data)
+{
+    Node *newNode = new Node;
+    newNode->data = data;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
 }
 
-string infixtopost(string s)
+bool isOperator(char c)
 {
-    stackADT<char> st;
-    string res;
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
 
-    for (int i = 0; i < s.length(); i++)
+Node *createExprTree(string postfix)
+{
+    stack<Node *> s;
+    for (char c : postfix)
     {
-        if (isalpha(s[i]))
+        if (isOperator(c))
         {
-            res += s[i];
-        }
-        else if (s[i] == '(')
-        {
-            st.push(s[i]);
-        }
-        else if (s[i] == ')')
-        {
-            while (!st.isempty() && st.peek() != ')')
-            {
-                res += st.pop();
-            }
-            if (!st.isempty())
-            {
-                st.pop();
-            }
+            Node *right = s.top();
+            s.pop();
+            Node *left = s.top();
+            s.pop();
+
+            Node *newNode = createNode(c);
+            newNode->left = left;
+            newNode->right = right;
+            s.push(newNode);
         }
         else
         {
-            while (!st.isempty() && prec(st.peek()) >= prec(s[i]))
-            {
-                res += st.pop();
-            }
-            st.push(s[i]);
+            Node *operand = createNode(c);
+            s.push(operand);
         }
     }
-    while (!st.isempty())
-    {
-        res += st.pop();
-    }
-
-    return res;
+    return s.top();
 }
 
-string infixtoprefix(string s){
-    stackADT<char> st;
-    string res;
-
-    reverse(s.begin(),s.end());
-    for (int i = 0; i < s.length(); i++)
+void Inorder(Node *root)
+{
+    if (root != nullptr)
     {
-        if(isalpha(s[i])){
-            st.push(s[i]);
-        }
-        else if(s[i]=='('){
-            res+=s[i];
-        }
-        else if(s[i]==')'){
-            while (!st.isempty()&& st.peek()!='(')
-            {
-               res+=st.pop();
-            }
-            if(!st.isempty()){
-                st.pop();
-            }
-        }
-        else{
-            while (!st.isempty()&&prec(st.peek())>=prec(s[i]))
-            {
-                res+=st.pop();
-            }
-            st.push(s[i]);
-        }
+        Inorder(root->left);
+        cout << root->data << " ";
+        Inorder(root->right);
     }
-    while (!st.isempty())
-    {
-        res+=st.pop();
-    }
-
-    reverse(res.begin(),res.end());
-    return res;
-    
-    
 }
 
-int postfix_Evalution(string s){
-    stackADT<int> st;
-    for (int i = 0; i < s.length(); i++)
+void inorderNonRecur(Node *root)
+{
+    stack<Node *> st;
+    Node *current = root;
+    while (!st.empty() || 
+    current != nullptr)
     {
-        if(s[i]>='0'&&s[i]<='9'){
-            st.push(s[i]-'0');
+        if (current != nullptr)
+        {
+            st.push(current);
+            current = current->left;
         }
-        else{
-            int op2 = st.pop();
-            int op1 = st.pop();
-
-            switch (s[i])
-            {
-            case '+':
-                st.push(op1+op2);
-                break;
-            case '-':
-                st.push(op1-op2);
-                break;
-            case '*':
-                st.push(op1*op2);
-                break;
-            case '/':
-                st.push(op1/op2);
-                break;
-            
-            default:
-                break;
-            }
+        else
+        {
+            current = st.top();
+            st.pop();
+            cout << current->data << " ";
+            current = current->right;
         }
     }
-    return st.peek();
-    
 }
-int prefix_Evaluation(string s){
-    stackADT<int> st;
-    for (int i = s.length()-1; i >=0 ; i--)
+void preorderNonRecur(Node *root)
+{
+    stack<Node *> st;
+    Node *current = root;
+    while (!st.empty() || current != nullptr)
     {
-        if(s[i]>='0'&&s[i]<='9'){
-            st.push(s[i]-'0');
+        if (current != nullptr)
+        {
+            cout << current->data << " ";
+            st.push(current);
+            current = current->left;
         }
-        else{
-            int op1 = st.pop();
-            int op2 = st.pop();
-
-            switch (s[i])
-            {
-            case '+':
-                st.push(op1+op2);
-                break;
-            case '-':
-                st.push(op1-op2);
-                break;
-            case '*':
-                st.push(op1*op2);
-                break;
-            case '/':
-                st.push(op1/op2);
-                break;
-            
-            default:
-                break;
-            }
+        else
+        {
+            current = st.top();
+            st.pop();
+            current = current->right;
         }
     }
-    return st.peek();
-    
+}
+void Preorder(Node *root)
+{
+    if (root != nullptr)
+    {
+        cout << root->data << " ";
+        Inorder(root->left);
+        Inorder(root->right);
+    }
+}
+void Postorder(Node *root)
+{
+    if (root != nullptr)
+    {
+        Inorder(root->left);
+        Inorder(root->right);
+        cout << root->data << " ";
+    }
 }
 
 int main(int argc, char const *argv[])
 {
-    string s = infixtoprefix("A+B");
-    cout << s;
+    Node* root;
 
-    int r = prefix_Evaluation("+58");
-    cout<<r;
+    string postfix = "";
+
+    cout<<"lavada: ";
+    cin>>postfix;
+    root = createExprTree(postfix);
+    inorderNonRecur(root);
     return 0;
 }
