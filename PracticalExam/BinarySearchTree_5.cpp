@@ -2,7 +2,6 @@
 using namespace std;
 struct node
 {
-    /* data */
     int data;
     node *left;
     node *right;
@@ -16,7 +15,6 @@ struct node
 
 class BST
 {
-
 public:
     node *insertNode(node *root, int v)
     {
