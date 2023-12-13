@@ -8,13 +8,8 @@ public:
     int data;
     Node *left, *right;
     int left_th, right_th;
+ Node(int x) : data(x), left(nullptr), right(nullptr), left_th(false), right_th(false) {}
 
-    Node(int x)
-    {
-        data = x;
-        left = right = NULL;
-        left_th = right_th = 0;
-    }
 };
 
 class TBT
@@ -33,41 +28,43 @@ public:
         createRecursive(root, 0);
     }
 
-    void createRecursive(Node *parent, int child)
+   void createRecursive(Node *parent, int child)
+{
+    int value;
+
+    cout << "Enter data or -1 to stop: ";
+    cin >> value;
+
+    if (value == -1)
     {
-        int value;
-
-        cout << "Enter data or -1 to stop: ";
-        cin >> value;
-
-        if (value == -1)
-        {
-            return;
-        }
-
-        Node *newNode = new Node(value);
-
-        if (child == 0)
-        {
-            newNode->left = parent->left;
-            newNode->right = parent;
-            parent->left = newNode;
-            parent->left_th = 1;
-        }
-        else if (child == 1)
-        {
-            newNode->right = parent->right;
-            newNode->left = parent;
-            parent->right = newNode;
-            parent->right_th = 1;
-        }
-
-        cout << "Enter left of " << value << ": ";
-        createRecursive(newNode, 0);
-
-        cout << "Enter right of " << value << ": ";
-        createRecursive(newNode, 1);
+        return;
     }
+
+    Node *newNode = new Node(value);
+
+    if (child == 0)
+    {
+        newNode->left = parent->left;
+        newNode->right = parent;
+        parent->left = newNode;
+        parent->left_th = 1;
+    }
+    else if (child == 1)
+    {
+        newNode->right = parent->right;
+        newNode->left = parent;
+        parent->right = newNode;
+        parent->right_th = 1;
+    }
+
+    cout << "Enter left of " << value << ": ";
+    createRecursive(newNode, 0);
+
+    cout << "Enter right of " << value << ": ";
+    // Pass '1' to indicate right child
+    createRecursive(newNode, 1);
+}
+
 
     void inorder()
     {
@@ -84,7 +81,7 @@ public:
 
             cout << current->data << " ";
 
-            while (current->right_th == 0 || current->right == root)
+            while (current->right_th == 0 || (current->right_th == 1 && current->right != root))
             {
                 current = current->right;
                 if (current == root)

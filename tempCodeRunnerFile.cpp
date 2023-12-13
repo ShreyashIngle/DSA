@@ -1,135 +1,155 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
 using namespace std;
 
-void maxHeapify(int arr[], int n, int i)
+class Node
 {
-    int rootIndex = i;
-    int leftIndex = 2 * i + 1;
-    int rightindex = 2 * i + 2;
+public:
+    int data;
+    Node *left, *right;
+    int left_th, right_th;
+ Node(int x) : data(x), left(nullptr), right(nullptr), left_th(false), right_th(false) {}
 
-    if (leftIndex < n && arr[leftIndex] > arr[rootIndex])
+};
+
+class TBT
+{
+public:
+    Node *root;
+
+    TBT()
     {
-        rootIndex = leftIndex;
+        root = new Node(-1);
+        root->left = root->right = root;
     }
-    if (rightindex < n && arr[rightindex] > arr[rootIndex])
+
+    void create()
     {
-        rootIndex = rightindex;
+        createRecursive(root, 0);
     }
-    if (rootIndex != i)
+
+   void createRecursive(Node *parent, int child)
+{
+    int value;
+
+    cout << "Enter data or -1 to stop: ";
+    cin >> value;
+
+    if (value == -1)
     {
-        swap(arr[rootIndex], arr[i]);
-        maxHeapify(arr, n, rootIndex);
+        return;
     }
+
+    Node *newNode = new Node(value);
+
+    if (child == 0)
+    {
+        newNode->left = parent->left;
+        newNode->right = parent;
+        parent->left = newNode;
+        parent->left_th = 1;
+    }
+    else if (child == 1)
+    {
+        newNode->right = parent->right;
+        newNode->left = parent;
+        parent->right = newNode;
+        parent->right_th = 1;
+    }
+
+    cout << "Enter left of " << value << ": ";
+    createRecursive(newNode, 0);
+
+    cout << "Enter right of " << value << ": ";
+    // Pass '1' to indicate right child
+    createRecursive(newNode, 1);
 }
 
-void minHeapify(int arr[], int n, int i)
-{
-    int rootIndex = i;
-    int leftIndex = 2 * i + 1;
-    int rightindex = 2 * i + 2;
 
-    if (leftIndex < n && arr[leftIndex] < arr[rootIndex])
+    void inorder()
     {
-        rootIndex = leftIndex;
-    }
-    if (rightindex < n && arr[rightindex] < arr[rootIndex])
-    {
-        rootIndex = rightindex;
-    }
-    if (rootIndex != i)
-    {
-        swap(arr[rootIndex], arr[i]);
-        minHeapify(arr, n, rootIndex);
-    }
-}
+        cout << "\nInorder traversal:\n";
+        Node *current = root->left;
 
-void heapSort(int arr[], int n, int choice)
-{
-    if (choice == 1)
-    {
-        for (int i = (n / 2 - 1); i >= 0; i--)
+        while (current != root)
         {
-            maxHeapify(arr, n, i);
-        }
-        for (int i = n - 1; i >= 0; i--)
-        {
-            swap(arr[0], arr[i]);
-            maxHeapify(arr, i, 0);
+            while (current->left_th == 1)
+            {
+                current = current->left;
+                cout << current->data << " ";
+            }
+
+            cout << current->data << " ";
+
+            while (current->right_th == 0 || (current->right_th == 1 && current->right != root))
+            {
+                current = current->right;
+                if (current == root)
+                {
+                    return;
+                }
+                cout << current->data << " ";
+            }
+
+            current = current->right;
         }
     }
-    else
+
+    void preorder()
     {
-        for (int i = (n / 2 - 1); i >= 0; i--)
+        cout << "Preorder traversal:\n";
+        Node *current = root->left;
+
+        while (current != root)
         {
-            minHeapify(arr, n, i);
-        }
-        for (int i = n - 1; i >= 0; i--)
-        {
-            swap(arr[0], arr[i]);
-            minHeapify(arr, i, 0);
+            cout << current->data << " ";
+
+            while (current->left_th == 1)
+            {
+                current = current->left;
+                cout << current->data << " ";
+            }
+
+            while (current->right_th == 0 || current->right == root)
+            {
+                current = current->right;
+                if (current == root)
+                {
+                    return;
+                }
+            }
+
+            current = current->right;
         }
     }
-}
-
-void printArray(int arr[], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-
-        cout << arr[i] << " ";
-    }
-    cout << endl;
-}
+};
 
 int main()
 {
-    int n;
-    cout << "Enter Size of the Array : ";
-    cin >> n;
-    int arr[n];
-    cout << "Enter Array Elements : ";
-    for (int i = 0; i < n; i++)
-    {
-        cin >> arr[i];
-    }
-    cout << endl;
+    TBT tree;
+    int choice;
 
     while (true)
     {
-        cout << "Choose any one " << endl;
-        cout << "1. Max Heap." << endl;
-        cout << "2. Min Heap." << endl;
-        cout << "3. Exit." << endl;
-        cout << endl;
-
-        int choice;
-        cout << "Enter Your Choice : ";
+        cout << "\n1: Create TBT\n2: Inorder Traversal\n3: Preorder Traversal\n4: Exit\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
-        if (choice == 1)
+        switch (choice)
         {
-            cout << "Initial Array : ";
-            printArray(arr, n);
-            heapSort(arr, n, 1);
-            cout << "Sorted Array : ";
-            printArray(arr, n);
-        }
-        else if (choice == 2)
-        {
-            cout << "Initial Array : ";
-            printArray(arr, n);
-            heapSort(arr, n, 2);
-            cout << "Sorted Array : ";
-            printArray(arr, n);
-        }
-        else if (choice == 3)
-        {
-            cout << "Exiting the Program..." << endl;
+        case 1:
+            tree.create();
             break;
-        }
-        else
-        {
-            cout << "Please Enter Valid Input..." << endl;
+        case 2:
+            tree.inorder();
+            break;
+        case 3:
+            tree.preorder();
+            break;
+        case 4:
+            return 0;
+        default:
+            cout << "Invalid choice. Please try again.\n";
         }
     }
 

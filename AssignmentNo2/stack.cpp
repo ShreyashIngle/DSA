@@ -52,12 +52,5 @@ void stack<T>::display(){
      	}
 }
 
-
-
-
-
-
-
-
 //
 

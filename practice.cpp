@@ -1,124 +1,186 @@
 #include <bits/stdc++.h>
+#include <C:\Users\Tejas Ingle\OneDrive\Desktop\PICT Study\DSA\PracticalExam\InfixtoPost_2\stackADT.cpp>
 using namespace std;
 
-struct Node
+int prec(char c)
 {
-public:
-    int data;
-    Node *left, *right;
-    int left_th, right_th;
-
-    Node(int x)
+    if (c == '^')
     {
-        data = x;
-        left = right = nullptr;
-        left_th = right_th = 0;
+        return 3;
     }
-};
+    else if (c == '*' && c == '/')
+    {
+        return 2;
+    }
+    else if (c == '+' && c == '-')
+    {
+        return 1;
+    }
+    else
+    {
+        return -1;
+    }
+}
 
-class TBT
+string infixtopost(string s)
 {
-public:
-    Node *root;
-    TBT()
-    {
-        root = new Node(-1);
-        root->left = root->right = root;
-    }
+    stackADT<char> st;
+    string res;
 
-    void create()
+    for (int i = 0; i < s.length(); i++)
     {
-        createRecursive(root, 0);
-    }
-
-    void createRecursive(Node *parent, int child)
-    {
-        int value;
-        cout << "\nEnter the value or -1 to exit :";
-        cin >> value;
-
-        if (value == -1)
+        if (isalpha(s[i]))
         {
-            return;
+            res += s[i];
         }
-
-        Node *newNode = new Node(value);
-
-        if (child == 0)
+        else if (s[i] == '(')
         {
-            newNode->left = parent->left;
-            newNode->right = parent;
-            parent->left = newNode;
-            parent->left_th = 1;
+            st.push(s[i]);
+        }
+        else if (s[i] == ')')
+        {
+            while (!st.isempty() && st.peek() != ')')
+            {
+                res += st.pop();
+            }
+            if (!st.isempty())
+            {
+                st.pop();
+            }
         }
         else
         {
-            newNode->right = parent->right;
-            newNode->left = parent;
-            parent->right = newNode;
-            parent->right_th = 1;
+            while (!st.isempty() && prec(st.peek()) >= prec(s[i]))
+            {
+                res += st.pop();
+            }
+            st.push(s[i]);
         }
-
-        cout << "\nEnter the left value of " << value << ":";
-        createRecursive(newNode, 0);
-
-        cout << "\nEnter the right value of " << value << ":";
-        createRecursive(newNode, 1);
     }
-    void inorder()
+    while (!st.isempty())
     {
-        cout << "\nInorder traversal:\n";
-        Node *current = root->left;
+        res += st.pop();
+    }
 
-        while (current != root)
-        {
-            while (current->left_th == 1)
+    return res;
+}
+
+string infixtoprefix(string s){
+    stackADT<char> st;
+    string res;
+
+    reverse(s.begin(),s.end());
+    for (int i = 0; i < s.length(); i++)
+    {
+        if(isalpha(s[i])){
+            st.push(s[i]);
+        }
+        else if(s[i]=='('){
+            res+=s[i];
+        }
+        else if(s[i]==')'){
+            while (!st.isempty()&& st.peek()!='(')
             {
-                current = current->left;
-                cout << current->data << " ";
+               res+=st.pop();
             }
-
-            cout << current->data << " ";
-
-            while (current->right_th == 0 || current->right == root)
+            if(!st.isempty()){
+                st.pop();
+            }
+        }
+        else{
+            while (!st.isempty()&&prec(st.peek())>=prec(s[i]))
             {
-                current = current->right;
-                if (current == root)
-                {
-                    return;
-                }
-                cout << current->data << " ";
+                res+=st.pop();
             }
-
-            current = current->right;
+            st.push(s[i]);
         }
     }
-};
+    while (!st.isempty())
+    {
+        res+=st.pop();
+    }
 
-int
-main(int argc, char const *argv[])
+    reverse(res.begin(),res.end());
+    return res;
+    
+    
+}
+
+int postfix_Evalution(string s){
+    stackADT<int> st;
+    for (int i = 0; i < s.length(); i++)
+    {
+        if(s[i]>='0'&&s[i]<='9'){
+            st.push(s[i]-'0');
+        }
+        else{
+            int op2 = st.pop();
+            int op1 = st.pop();
+
+            switch (s[i])
+            {
+            case '+':
+                st.push(op1+op2);
+                break;
+            case '-':
+                st.push(op1-op2);
+                break;
+            case '*':
+                st.push(op1*op2);
+                break;
+            case '/':
+                st.push(op1/op2);
+                break;
+            
+            default:
+                break;
+            }
+        }
+    }
+    return st.peek();
+    
+}
+int prefix_Evaluation(string s){
+    stackADT<int> st;
+    for (int i = s.length()-1; i >=0 ; i--)
+    {
+        if(s[i]>='0'&&s[i]<='9'){
+            st.push(s[i]-'0');
+        }
+        else{
+            int op1 = st.pop();
+            int op2 = st.pop();
+
+            switch (s[i])
+            {
+            case '+':
+                st.push(op1+op2);
+                break;
+            case '-':
+                st.push(op1-op2);
+                break;
+            case '*':
+                st.push(op1*op2);
+                break;
+            case '/':
+                st.push(op1/op2);
+                break;
+            
+            default:
+                break;
+            }
+        }
+    }
+    return st.peek();
+    
+}
+
+int main(int argc, char const *argv[])
 {
-    TBT tree;
-    int choice;
-    while (true)
-    {
-        cout << "\n1.Create Tree\n2.Inorder\nPreorder\nEnter the choice:";
-        cin >> choice;
+    string s = infixtoprefix("A+B");
+    cout << s;
 
-        switch (choice)
-        {
-        case 1:
-            tree.create();
-            break;
-
-        case 2:
-            tree.inorder();
-            break;
-
-        default:
-            break;
-        }
-    }
-
+    int r = prefix_Evaluation("+58");
+    cout<<r;
     return 0;
 }
