@@ -1,13 +1,13 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-struct node
-{
-    /* data */
-    int data;
-    node *left;
-    node *right;
 
-    node(int v)
+struct Node
+{
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int v)
     {
         data = v;
         left = right = nullptr;
@@ -16,220 +16,109 @@ struct node
 
 class BST
 {
-
 public:
-    node *insertNode(node *root, int v)
+    Node *insertNode(Node *root, int v)
     {
-        if (root == nullptr)
+        if (root->data == nullptr)
         {
-            return new node(v);
+            return new Node(v);
         }
-
-        if (root->data > v)
+        else if (root->data > v)
         {
-            cout << "left...\n";
+            cout << "left..";
             root->left = insertNode(root->left, v);
         }
         else
         {
-            cout << "right..\n";
+            cout << "\nright...";
             root->right = insertNode(root->right, v);
         }
-
-        cout << "Node inserted...\n";
+        cout << "Node Inserted";
         return root;
     }
 
-    void inorder(node *root)
+    Node *searchNode(Node *root, int key)
     {
-        if (root == nullptr)
+        if (root->data == nullptr)
         {
             return;
         }
-        inorder(root->left);
-        cout << root->data << " ";
-        inorder(root->right);
-    }
-
-    node *searchNode(node *root, int key)
-    {
-        if (root == NULL)
+        else if (root->data == key)
         {
-            return nullptr;
-        }
-
-        if (root->data == key)
-        {
-            cout << "root found\n";
+            cout << " data found\n";
             return root;
         }
         else if (root->data > key)
         {
-            return searchNode(root->left, key);
+            return searchNode(root->left, v);
         }
         else
         {
-            return searchNode(root->right, key);
+            return searchNode(root->right, v);
         }
     }
 
-    node *deleteNode(node *root, int d)
+    void Inorder(Node *root)
     {
+        if (root != nullptr)
+        {
+            Inorder(root->left);
+            cout << root->data << " ";
+            Inorder(root->right);
+        }
+    }
 
+    Node *deleteNode(Node *root, int d)
+    {
         if (root->data == d)
         {
-            if (root->left == NULL && root->right == NULL)
+            if (root->data == nullptr && root->data == nullptr)
             {
                 delete root;
-                return NULL;
+                return nullptr;
             }
-            else if (root->left != NULL && root->right == NULL)
+            else if (root->data != nullptr && root->data == nullptr)
             {
-                node *temp = root->left;
-                delete root;
-                return temp;
-            }
-            else if (root->left == NULL && root->right != NULL)
-            {
-                node *temp = root->right;
+                Node *temp = root->left;
                 delete root;
                 return temp;
             }
-        }
-        else if (root->data > d)
-        {
-            root->left = deleteNode(root->left, d);
+            else if (root->data == nullptr && root->data != nullptr)
+            {
+                Node *temp = root->right;
+                delete root;
+                return temp;
+            }
         }
         else
         {
-            root->right = deleteNode(root->right, d);
+            if (root->data > d)
+            {
+                root->left = deleteNode(root->left, d);
+            }
+            else
+            {
+                root->right = deleteNode(root->right, d);
+            }
         }
         return root;
     }
 
-    node *leafNode(node *root)
-    {
-        if (root == NULL)
-        {
-            return NULL;
-        }
+    Node* leafNode(Node* root){
+        if(root==nullptr){
+            return nullptr;
 
-        if (root->left == NULL && root->right == NULL)
-        {
-            cout << root->data << " ";
+        }
+        if(root->left == nullptr &&root->right==right){
+            cout<<root->data<<" ";
         }
         leafNode(root->left);
         leafNode(root->right);
     }
-
-    int depth(node *root)
-    {
-        node *temp = root;
-        if (temp == NULL)
-        {
-            return 0;
-        }
-        else
-        {
-            int ldepth = depth(temp->left);
-            int rdepth = depth(temp->right);
-
-            if (ldepth > rdepth)
-            {
-                return (ldepth + 1);
-            }
-            else
-            {
-                return (rdepth + 1);
-            }
-        }
-    }
-
-    void parentandChild(node *root)
-    {
-        if (root == NULL)
-        {
-            return;
-        }
-        cout << "Parent:" << root->data;
-
-        if (root->left != NULL)
-        {
-            cout << "Left child:" << root->left->data;
-        }
-
-        if (root->right != NULL)
-        {
-            cout << "Right child:" << root->right->data;
-        }
-        cout << endl;
-        parentandChild(root->left);
-        parentandChild(root->right);
-    }
 };
-int main()
+
+int main(int argc, char const *argv[])
 {
-    BST s;
-    node *root = NULL;
-    int choice, data, key;
-
-    while (true)
-    {
-        int choice;
-        cout << "\n\n------ Menu ------" << endl;
-        cout << "1. Insert Node" << endl;
-        cout << "2. Inorder Traversal" << endl;
-        cout << "3. Delete Node (by key)" << endl;
-        cout << "4. Find Leaf Nodes" << endl;
-        cout << "5. Search for a Key" << endl;
-        cout << "6. Get Depth of Tree" << endl;
-        cout << "7. Print Parent and Child Relationships" << endl;
-        cout << "8. Exit" << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-        case 1:
-            cout << "Enter data to insert: ";
-            cin >> data;
-            root = s.insertNode(root, data);
-            break;
-        case 2:
-            s.inorder(root);
-            break;
-        case 3:
-            cout << "Enter key to delete: ";
-            cin >> key;
-            s.deleteNode(root, key);
-            break;
-        case 4:
-            s.leafNode(root);
-            break;
-        case 5:
-            cout << "Enter key to search: ";
-            cin >> key;
-            s.searchNode(root, key);
-            break;
-        case 6:
-            cout << "Depth of tree: " << s.depth(root) << endl;
-            break;
-        case 7:
-            s.parentandChild(root);
-            break;
-        case 8:
-            cout << "Exiting..." << endl;
-            break;
-        default:
-            cout << "Invalid choice. Please try again." << endl;
-            break;
-        }
-
-        if (choice == 8)
-        {
-            break;
-        }
-    }
-
+    /* code */
     return 0;
 }
